@@ -1,10 +1,11 @@
 <?php
+
 namespace LaravelFrontendPresets\ZurbFoundationPreset;
 
 use Artisan;
 use Illuminate\Support\Arr;
 use Illuminate\Filesystem\Filesystem;
-use Illuminate\Foundation\Console\Presets\Preset;
+use Laravel\Ui\Presets\Preset;
 
 class ZurbFoundationPreset extends Preset
 {
@@ -19,12 +20,9 @@ class ZurbFoundationPreset extends Preset
         static::updateSass();
         static::updateBootstrapping();
 
-        if($withAuth)
-        {
+        if ($withAuth) {
             static::addAuthTemplates();
-        }
-        else
-        {
+        } else {
             static::updateWelcomePage();
         }
 
@@ -55,14 +53,13 @@ class ZurbFoundationPreset extends Preset
         // clean up orphan files
         $orphan_sass_files = glob(resource_path('/sass/*.*'));
 
-        foreach($orphan_sass_files as $sass_file)
-        {
+        foreach ($orphan_sass_files as $sass_file) {
             (new Filesystem)->delete($sass_file);
         }
 
-        copy(__DIR__.'/foundation-stubs/_settings.scss', resource_path('sass/_settings.scss'));
-        copy(__DIR__.'/foundation-stubs/foundation.scss', resource_path('sass/foundation.scss'));
-        copy(__DIR__.'/foundation-stubs/app.scss', resource_path('sass/app.scss'));
+        copy(__DIR__ . '/foundation-stubs/_settings.scss', resource_path('sass/_settings.scss'));
+        copy(__DIR__ . '/foundation-stubs/foundation.scss', resource_path('sass/foundation.scss'));
+        copy(__DIR__ . '/foundation-stubs/app.scss', resource_path('sass/app.scss'));
     }
 
     /**
@@ -76,7 +73,7 @@ class ZurbFoundationPreset extends Preset
             resource_path('js/bootstrap.js')
         );
 
-        copy(__DIR__.'/foundation-stubs/bootstrap.js', resource_path('js/bootstrap.js'));
+        copy(__DIR__ . '/foundation-stubs/bootstrap.js', resource_path('js/bootstrap.js'));
     }
 
     /**
@@ -92,7 +89,7 @@ class ZurbFoundationPreset extends Preset
         );
 
         // copy new one with Zurb Foundation buttons
-        copy(__DIR__.'/foundation-stubs/views/welcome.blade.php', resource_path('views/welcome.blade.php'));
+        copy(__DIR__ . '/foundation-stubs/views/welcome.blade.php', resource_path('views/welcome.blade.php'));
     }
 
     /**
@@ -103,13 +100,13 @@ class ZurbFoundationPreset extends Preset
     protected static function addAuthTemplates()
     {
         // Add Home controller
-        copy(__DIR__.'/foundation-stubs/Controllers/HomeController.php', app_path('Http/Controllers/HomeController.php'));
+        copy(__DIR__ . '/foundation-stubs/Controllers/HomeController.php', app_path('Http/Controllers/HomeController.php'));
 
         // Add Auth route in 'routes/web.php'
         $auth_route_entry = "Auth::routes();\n\nRoute::get('/home', 'HomeController@index')->name('home');\n\n";
         file_put_contents('./routes/web.php', $auth_route_entry, FILE_APPEND);
 
         // Copy Zurb Foundation Auth view templates
-        (new Filesystem)->copyDirectory(__DIR__.'/foundation-stubs/views', resource_path('views'));
+        (new Filesystem)->copyDirectory(__DIR__ . '/foundation-stubs/views', resource_path('views'));
     }
 }
